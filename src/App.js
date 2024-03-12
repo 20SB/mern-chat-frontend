@@ -1,5 +1,10 @@
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import {
+    Route,
+    Routes,
+    useLocation,
+    useParams,
+} from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import { ChatPage } from "./pages/ChatPage";
 import { GoogleLogin } from "./components/Authentication/Authentication/GoogleLogin";
@@ -10,20 +15,21 @@ import useGlobalToast from "./globalFunctions/toast";
 import { useNavigate } from "react-router-dom";
 
 function App() {
-    // Define the backend URL using an environment variable
-    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-    const { setUser, getGoogleUser, setGetGoogleUser } = ChatState();
+    const { setUser } = ChatState();
     const navigate = useNavigate();
 
     // use global toast function
     const toast = useGlobalToast();
 
-    const handleGetGoogleUser = async () => {
-        axios
-            .get(`${BACKEND_URL}/auth/login/success`, {
-                withCredentials: true,
-            })
-            .then(({ data }) => {
+    const location = useLocation();
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const googleLoginData = queryParams.get("google_login_data");
+
+        if (googleLoginData) {
+            console.log("found Google Login Data");
+            const data = JSON.parse(googleLoginData);
+            if (data.success) {
                 toast.success(data.message, "");
                 console.log("data", data);
                 setUser(data.data);
@@ -32,39 +38,9 @@ function App() {
                     JSON.stringify(data.data)
                 );
                 navigate("/chats");
-            })
-            .catch((error) => {
-                console.log("Error***", error);
-                toast.error(
-                    "Error",
-                    error.response
-                        ? error.response.data.message
-                        : "Something Went Wrong"
-                );
-            })
-            .finally(() => {
-                setGetGoogleUser(false);
-                localStorage.setItem(
-                    "needToGetGoogleUser",
-                    JSON.stringify(false)
-                );
-            });
-    };
-
-    useEffect(() => {
-        const needToGetGoogleUser = localStorage.getItem(
-            "needToGetGoogleUser"
-        );
-        if (!needToGetGoogleUser) {
-            console.log("No need to get google user");
-            setGetGoogleUser(false);
-            localStorage.setItem("needToGetGoogleUser", false);
-        } else {
-            console.log("get google user", needToGetGoogleUser);
-            setGetGoogleUser(needToGetGoogleUser);
-            if (needToGetGoogleUser == "true") {
-                console.log("reached here");
-                handleGetGoogleUser();
+            } else {
+                const data = JSON.parse(googleLoginData);
+                toast.error("Error", data.message);
             }
         }
     }, []);
