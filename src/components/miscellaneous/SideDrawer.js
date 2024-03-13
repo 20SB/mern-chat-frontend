@@ -288,19 +288,34 @@ const SideDrawer = () => {
                                             <ChevronDownIcon />
                                         )
                                     }
+                                    paddingX={{
+                                        base: "2",
+                                        md: "4",
+                                    }}
                                     isActive={true}
                                 >
                                     <Box
                                         display={"flex"}
                                         alignItems={"center"}
                                     >
-                                        {user.user.name}
+                                        <Text
+                                            display={{
+                                                base: "none",
+                                                md: "flex",
+                                            }}
+                                        >
+                                            {user.user.name}
+                                        </Text>
+
                                         <Avatar
                                             size="sm"
                                             cursor="pointer"
                                             name={user.user.name}
                                             src={user.user.dp}
-                                            ml={2}
+                                            ml={{
+                                                base: "0",
+                                                md: "2",
+                                            }}
                                         />
                                     </Box>
                                 </MenuButton>
