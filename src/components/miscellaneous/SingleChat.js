@@ -14,6 +14,7 @@ import {
     Portal,
     Spinner,
     Text,
+    useBreakpointValue,
 } from "@chakra-ui/react";
 import { AddIcon, ArrowBackIcon, CloseIcon } from "@chakra-ui/icons";
 import { getSender, getSenderFull } from "../../config/chatLogics";
@@ -31,7 +32,10 @@ import Lottie from "react-lottie";
 import loadingDots from "../../assets/animations/loadingDots.json";
 
 import io from "socket.io-client";
-import { mapToObject } from "../../config/notificationLogics";
+import {
+    mapToObject,
+    shortendMsg,
+} from "../../config/notificationLogics";
 const ENDPOINT = process.env.REACT_APP_BACKEND_URL;
 var socket, selectedChatCompare;
 
@@ -44,6 +48,12 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const [isTyping, setIsTyping] = useState(false);
     const [typingUser, setTypingUser] = useState({});
     const [isSendingMsg, setIsSendingMsg] = useState(false);
+
+    const maxHeadingLength = useBreakpointValue({
+        base: 15,
+        md: 50,
+        lg: 55,
+    });
 
     const {
         user,
@@ -487,8 +497,14 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 <>
                     <Box
                         fontSize={{ base: "28px", md: "30px" }}
-                        pb={3}
-                        px={2}
+                        pb={{
+                            base: "2",
+                            md: "3",
+                        }}
+                        px={{
+                            base: "1",
+                            md: "2",
+                        }}
                         w="100%"
                         display={"flex"}
                         justifyContent={{ base: "space-between" }}
@@ -542,9 +558,12 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                                                     cursor: "pointer",
                                                 }}
                                             >
-                                                {getSender(
-                                                    user,
-                                                    selectedChat.users
+                                                {shortendMsg(
+                                                    getSender(
+                                                        user,
+                                                        selectedChat.users
+                                                    ),
+                                                    maxHeadingLength
                                                 )}
                                                 {isTyping ? (
                                                     <div
@@ -606,7 +625,10 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                                                     h={"2.5rem"}
                                                     w={"2.5rem"}
                                                 />
-                                                {selectedChat.chatName.toUpperCase()}
+                                                {shortendMsg(
+                                                    selectedChat.chatName.toUpperCase(),
+                                                    maxHeadingLength
+                                                )}
                                             </div>
                                             {isTyping ? (
                                                 <div
@@ -653,7 +675,11 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                         display={"flex"}
                         flexDir={"column"}
                         justifyContent={"flex-end"}
-                        p={3}
+                        p={{
+                            base: "1",
+                            md: "2",
+                            lg: "3",
+                        }}
                         bg={"#E8E8E8"}
                         w={"100%"}
                         h={"100%"}

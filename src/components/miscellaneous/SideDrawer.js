@@ -12,6 +12,7 @@ import {
     Spinner,
     Text,
     Tooltip,
+    useBreakpointValue,
     useDisclosure,
 } from "@chakra-ui/react";
 import {
@@ -42,7 +43,10 @@ import NotificationBadge from "react-notification-badge";
 import { Effect } from "react-notification-badge";
 import { GroupChatNotification } from "../UserAvatar/GroupChatNotification";
 import { PersonlaChatNotification } from "../UserAvatar/PersonlaChatNotification";
-import { mapToObject } from "../../config/notificationLogics";
+import {
+    mapToObject,
+    shortendMsg,
+} from "../../config/notificationLogics";
 
 const SideDrawer = () => {
     // Define the backend URL using an environment variable
@@ -66,6 +70,11 @@ const SideDrawer = () => {
 
     // use global toast function
     const toast = useGlobalToast();
+
+    const maxHeadingLength = useBreakpointValue({
+        md: 15,
+        lg: 20,
+    });
 
     // Convert notification map to array and sort by lastMsgTime if notifications is not null or undefined
     const notificationArray = notifications
@@ -188,6 +197,7 @@ const SideDrawer = () => {
                 w={"100%"}
                 p={"5px 10px 5px 10px"}
                 borderWidth={"5px"}
+                boxSizing="border-box"
             >
                 <Tooltip
                     label="Search users to chat"
@@ -304,7 +314,10 @@ const SideDrawer = () => {
                                                 md: "flex",
                                             }}
                                         >
-                                            {user.user.name}
+                                            {shortendMsg(
+                                                user.user.name,
+                                                maxHeadingLength
+                                            )}
                                         </Text>
 
                                         <Avatar
