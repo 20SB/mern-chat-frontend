@@ -27,7 +27,7 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const [showPass, setShowPass] = useState(false);
     const navigate = useNavigate();
-    const { user, setUser } = ChatState();
+    const { setUser } = ChatState();
 
     // console.log("user", user);
     // Form data state

@@ -1,15 +1,9 @@
 import "./App.css";
-import {
-    Route,
-    Routes,
-    useLocation,
-    useParams,
-} from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import { ChatPage } from "./pages/ChatPage";
 import { GoogleLogin } from "./components/Authentication/Authentication/GoogleLogin";
 import { ChatState } from "./context/chatProvider";
-import axios from "axios";
 import { useEffect } from "react";
 import useGlobalToast from "./globalFunctions/toast";
 import { useNavigate } from "react-router-dom";
