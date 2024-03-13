@@ -17,7 +17,7 @@ export const ChatPage = () => {
                 display="flex"
                 justifyContent="space-between"
                 w="100%"
-                h="91vh"
+                h={`calc(100vh - 60px)`}
                 p={{
                     base: "1",
                     md: "10px",

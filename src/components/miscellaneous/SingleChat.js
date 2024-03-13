@@ -52,7 +52,7 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const maxHeadingLength = useBreakpointValue({
         base: 15,
         md: 50,
-        lg: 55,
+        lg: 45,
     });
 
     const {
@@ -849,7 +849,6 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                                     value={newMessage}
                                     onChange={typingHandler}
                                     placeholder="Enter message.."
-                                    width={"50%"}
                                 />
                                 <img
                                     width="24"

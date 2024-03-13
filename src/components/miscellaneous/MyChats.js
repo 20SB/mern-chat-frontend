@@ -39,8 +39,8 @@ export const MyChats = ({ fetchAgain }) => {
     } = ChatState();
     const maxHeadingLength = useBreakpointValue({
         base: 15,
-        md: 10,
-        lg: 30,
+        md: 45,
+        lg: 25,
     });
 
     const removeNotification = (chat) => {
