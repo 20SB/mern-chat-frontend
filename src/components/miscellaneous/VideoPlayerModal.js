@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
-    Button,
-    Image,
     Modal,
     ModalBody,
     ModalCloseButton,
     ModalContent,
-    ModalFooter,
     ModalOverlay,
     useDisclosure,
 } from "@chakra-ui/react";
@@ -19,6 +16,7 @@ export const VideoPlayerModal = ({ children, video }) => {
         <div>
             <span onClick={onOpen}>{children}</span>
             <Modal
+                closeOnOverlayClick={false}
                 isOpen={isOpen}
                 onClose={onClose}
                 size={"lg"}
