@@ -107,7 +107,6 @@ const SideDrawer = () => {
     const logoutHandler = () => {
         localStorage.removeItem("userInfo");
         localStorage.removeItem("unseenNotifications");
-        localStorage.removeItem("needToGetGoogleUser");
         navigate("/");
     };
     const handleSearch = async () => {

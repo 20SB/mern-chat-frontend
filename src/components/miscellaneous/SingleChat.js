@@ -6,7 +6,6 @@ import {
     CircularProgress,
     FormControl,
     IconButton,
-    Input,
     Menu,
     MenuButton,
     MenuItem,
@@ -16,7 +15,7 @@ import {
     Text,
     useBreakpointValue,
 } from "@chakra-ui/react";
-import { AddIcon, ArrowBackIcon, CloseIcon } from "@chakra-ui/icons";
+import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import { getSender, getSenderFull } from "../../config/chatLogics";
 import { ProfileModal } from "./ProfileModal";
 import { UpdateGroupChatModal } from "./UpdateGroupChatModal";
@@ -27,15 +26,17 @@ import chatWall from "../../assets/images/wpWall.png";
 import { ScrollableChat } from "./ScrollableChat";
 import InputEmoji from "react-input-emoji";
 import { IoIosDocument, IoMdPhotos } from "react-icons/io";
-import { FaUser, FaCamera, FaFileVideo } from "react-icons/fa";
+import { FaFileVideo } from "react-icons/fa";
 import Lottie from "react-lottie";
 import loadingDots from "../../assets/animations/loadingDots.json";
+import { AiOutlineFileGif } from "react-icons/ai";
 
 import io from "socket.io-client";
 import {
     mapToObject,
     shortendMsg,
 } from "../../config/notificationLogics";
+import { GifModal } from "./GifModal";
 const ENDPOINT = process.env.REACT_APP_BACKEND_URL;
 var socket, selectedChatCompare;
 
@@ -55,13 +56,8 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         lg: 45,
     });
 
-    const {
-        user,
-        selectedChat,
-        setSelectedChat,
-        notifications,
-        setNotifications,
-    } = ChatState();
+    const { user, selectedChat, setSelectedChat, setNotifications } =
+        ChatState();
     const toast = useGlobalToast();
     const typingRef = useRef(false);
     const fileInputDocRef = useRef(null);
@@ -99,6 +95,48 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             setTypingUser({});
         });
     }, []);
+
+    const handleGifMessage = (gif) => {
+        console.log("gif inside function", gif);
+        console.log("gif preview link", gif.url);
+
+        setIsSendingMsg(true);
+        const config = {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${user.token}`,
+            },
+        };
+        setNewMessage("");
+        axios
+            .post(
+                `${BACKEND_URL}/api/message`,
+                {
+                    isFileInput: true,
+                    isGif: true,
+                    fileType: "img",
+                    gif: gif.url,
+                    chatId: selectedChat._id,
+                },
+                config
+            )
+            .then(({ data }) => {
+                setMessages([...messages, data.data.message]);
+                socket.emit("new message", data.data.message);
+            })
+            .catch((error) => {
+                toast.error(
+                    "Error",
+                    error.response
+                        ? error.response.data.message
+                        : "Something Went Wrong"
+                );
+            })
+            .finally(() => {
+                setIsSendingMsg(false);
+                setFetchAgain(!fetchAgain);
+            });
+    };
 
     const handleFileSelection = (e, fileType) => {
         console.log("fileType", fileType);
@@ -842,6 +880,22 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                                                     multiple
                                                 />
                                             </MenuItem>
+                                            <GifModal
+                                                handleGifMessage={
+                                                    handleGifMessage
+                                                }
+                                            >
+                                                <MenuItem
+                                                    icon={
+                                                        <AiOutlineFileGif
+                                                            size={20}
+                                                            color="#156c01"
+                                                        />
+                                                    }
+                                                >
+                                                    Gif
+                                                </MenuItem>
+                                            </GifModal>
                                         </MenuList>
                                     </Portal>
                                 </Menu>

@@ -39,3 +39,7 @@
         border-radius: 15px;
     }
 }
+
+.GifPickerReact .gpr-search-container input.gpr-search {
+    width: 86% !important;
+}
